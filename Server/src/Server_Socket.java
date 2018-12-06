@@ -5,46 +5,108 @@ import java.net.Socket;
 class Mult extends Thread
 {
     private Socket socket;
-    BufferedReader in;
-    PrintWriter out;
-    BufferedReader sin;
-
     Mult(Socket socket) throws IOException
     {
         this.socket=socket;
-        in= new BufferedReader(new InputStreamReader(socket.getInputStream()));
-        out= new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())),true);
-        sin= new BufferedReader(new InputStreamReader(System.in));
         start();
     }
     public void run() {
-        try{
-            String s=sin.readLine();
-            while(!s.equals("END"))
+        new Server_Send(socket);
+        new Server_Receive(socket);
+    }
+}
+
+
+class Server_Send extends Thread
+{
+    private Socket socket;
+    PrintWriter out;
+    BufferedReader sin;
+    Server_Send(Socket socket){
+        this.socket=socket;
+        try {
+            out= new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())),true);
+            sin= new BufferedReader(new InputStreamReader(System.in));
+            start();
+        }
+        catch (IOException e)
+        {
+            System.out.println("Error:"+e);
+        }
+    }
+    public void run()
+    {
+        try {
+            String sendstr=sin.readLine();
+            while(!sendstr.equals("END"))
             {
-                out.println(s);
+                out.println(sendstr);
                 out.flush();
-                System.out.println("Clinet: " + in.readLine());
-                System.out.println("Server: "+s);
-                s=sin.readLine();
+                System.out.println("Server :"+sendstr);
+                sendstr=sin.readLine();
             }
         }
         catch (IOException e)
         {
-            System.out.println("Error: " + e);
+            System.out.println("发送失败");
         }
-        try {
-            socket.close();
+        try
+        {
             out.close();
-            in.close();
             sin.close();
+            socket.close();
         }
         catch (IOException e)
         {
-            System.out.println("Error: "+e);
+
+        }
+
+    }
+}
+
+
+
+class Server_Receive extends Thread
+{
+    private Socket socket;
+    BufferedReader in;
+    Server_Receive(Socket socket)
+    {
+        this.socket=socket;
+        try {
+            in= new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            start();
+        }
+        catch (IOException e)
+        {
+            System.out.println("Error:"+e);
+        }
+    }
+    public void run() {
+        try{
+            String receivestr=in.readLine();
+            while(!receivestr.equals("END"))
+            {
+                System.out.println("Client:"+receivestr);
+                receivestr = in.readLine();
+            }
+        }
+        catch (IOException e){
+            System.out.println("发送失败");
+        }
+        try{
+            in.close();
+            socket.close();
+        }
+        catch (IOException e)
+        {
+
         }
     }
 }
+
+
+
 public class Server_Socket{
     public static final int PORT = 8080;
     public static void main(String[] args)throws IOException {
