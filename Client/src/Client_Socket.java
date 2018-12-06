@@ -1,63 +1,60 @@
 import java.io.*;
 import java.net.Socket;
 
-class ClientSocketMultThread extends Thread
+class ClientSocketThread extends Thread
 {
-    private BufferedReader in;
-    private PrintWriter out;
-    private BufferedReader sin;
     private Socket socket;
-    private static int threadcount=0;
+    private int ID;
+    public static int threadcount=0;
     public static int threadCount(){
         return threadcount;
     }
-    ClientSocketMultThread(){
-        threadcount++;
-        try{
-            socket = new Socket("127.0.0.1",8080);
-        }
-        catch (IOException e)
-        {
+    ClientSocketThread() {
+        ID=threadcount++;
+        try {
+            socket = new Socket("127.0.0.1", 8080);
+        } catch (IOException e) {
             System.out.println("客户端连接失败");
         }
-        try
-        {
-            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())),true);
-            sin =new BufferedReader(new InputStreamReader(System.in));
-            start();
+        start();
+    }
+    public void run() {
+        new Client_Recive(socket);
+        new Client_Send(socket);
+    }
+}
+
+class Client_Send extends Thread{
+    private Socket socket;
+    PrintWriter out;
+    BufferedReader sin;
+    Client_Send(Socket socket)
+    {
+        this.socket=socket;
+        try{
+            out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(this.socket.getOutputStream())),true);
         }
         catch (IOException e)
         {
-            System.out.println("获得输入输出流失败");
-            try {
-                socket.close();
-            }
-            catch (IOException e1)
-            {
-
-            }
+            System.out.println("获得输入流失败");
         }
+        sin =new BufferedReader(new InputStreamReader(System.in));
+        start();
     }
 
     public void run() {
         try {
-            String s = sin.readLine();
-            while(true) {
-                if(s.equals("END")) {
-                    break;
-                }
-                out.println(s);
+            String Sendstr= sin.readLine();
+            while(!Sendstr.equals("END")) {
+                out.println(Sendstr);
                 out.flush();
-                System.out.println("Clint:"+s);
-                System.out.println("Server: "+in.readLine());
-                s = sin.readLine();
+                System.out.println("Clint:"+Sendstr);
+                Sendstr = sin.readLine();
             }
             out.println("END");
-            in.close();
             out.close();
             socket.close();
-            threadcount--;
+            ClientSocketThread.threadcount--;
         }
         catch (IOException e)
         {
@@ -66,12 +63,53 @@ class ClientSocketMultThread extends Thread
     }
 }
 
+class Client_Recive extends Thread
+{
+    private BufferedReader in;
+    private Socket socket;
+    Client_Recive(Socket socket){
+        this.socket=socket;
+        try
+        {
+            in=new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        }
+        catch (IOException e)
+        {
+            System.out.println("in获得失败");
+        }
+        start();
+    }
+
+    public void run() {
+        try {
+            String reciverstr=in.readLine();
+            while(!reciverstr.equals("END"))
+            {
+                System.out.println("Server:"+reciverstr);
+                reciverstr=in.readLine();
+            }
+        }
+        catch (IOException e)
+        {
+            System.out.println("Error" + e);
+        }
+        try {
+            in.close();
+            socket.close();
+        }
+        catch (IOException e)
+        {
+
+        }
+    }
+}
+
 public class Client_Socket {
     static final int MAX_THREADS=40;
     public void make_connect(){
-        if(ClientSocketMultThread.threadCount()<MAX_THREADS)
+        if(ClientSocketThread.threadCount()<MAX_THREADS)
         {
-            new ClientSocketMultThread();
+            new ClientSocketThread();
         }
         else
         {
