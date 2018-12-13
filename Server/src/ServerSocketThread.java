@@ -9,7 +9,7 @@ public class ServerSocketThread extends Thread {
         start();
     }
     public void run() {
-        new Send(socket,"Server");
-        new Receive(socket,"Client");
+        new (socket);
+        new Receive(socket);
     }
 }
