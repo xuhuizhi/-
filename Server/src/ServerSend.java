@@ -1,49 +1,32 @@
 import java.io.*;
 import java.net.Socket;
 
-class ServerSend extends Thread
-{
-    private Socket socket;
-    PrintWriter out;
+public class ServerSend extends Thread {
+    private static PrintWriter out;
     BufferedReader sin;
-    ServerSend(Socket socket){
-        this.socket=socket;
-        try {
-            out= new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())),true);
-            sin= new BufferedReader(new InputStreamReader(System.in));
-            start();
-        }
-        catch (IOException e)
-        {
-            System.out.println("Error:"+e);
-        }
-    }
-    public void run()
+    private String name;
+    ServerSend(String name,Socket socket) throws IOException
     {
+        this.name=name;
+        sin = new BufferedReader(new InputStreamReader(System.in));
+        out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())), true);
+        start();
+    }
+    private void SendStr(String Str)
+    {
+        out.println(Str);
+        out.flush();
+        System.out.println(name+":"+Str);
+    }
+
+    public void run() {
         try {
-            String sendStr=sin.readLine();
-            while(!sendStr.equals("END"))
-            {
-                out.println(sendStr);
-                out.flush();
-                System.out.println("Server :"+sendStr);
-                sendStr=sin.readLine();
-            }
+            String sendStr= sin.readLine();
+
         }
         catch (IOException e)
         {
-            System.out.println("发送失败");
+            System.out.println("客户端系统读入失败");
         }
-        try
-        {
-            out.close();
-            sin.close();
-            socket.close();
-        }
-        catch (IOException e)
-        {
-
-        }
-
     }
 }
