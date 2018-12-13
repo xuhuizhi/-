@@ -1,13 +1,16 @@
 public class ClientSocket {
     static final int MAX_THREADS=40;
-    public void makeConnect(){
-        if(ClientSocketThread.getThreadCount()<MAX_THREADS)
+    static int threadCount=0;
+    ClientSocket(){
+        if(threadCount<40)
         {
-            new ClientSocketThread();
+            //System.out.println("当前客户端ID:"+(threadCount+2));
+            new ClientSocketThread(threadCount+2);
+            threadCount++;
         }
         else
         {
-            System.out.println("当前接入客户端太多");
+            System.out.println("当前客户端连接太多，请稍后再试");
         }
     }
 }

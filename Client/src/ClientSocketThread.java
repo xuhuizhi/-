@@ -5,15 +5,12 @@ import java.util.Properties;
 
 public class ClientSocketThread extends Thread{
     private Socket socket;
+    public int ID;
     Properties prop = new Properties();
     InputStream in = ClientSocketThread.class.getClassLoader().getResourceAsStream(
             "Ip.properties");
-    //private int ID;
-    public static int threadCount=0;
-    public static int getThreadCount(){
-        return threadCount;
-    }
-    ClientSocketThread() {
+    ClientSocketThread(int id) {
+        this.ID=id;
         try {
             prop.load(in);
             socket = new Socket(prop.getProperty("host"), Integer.valueOf(prop.getProperty("port")).intValue());
@@ -24,7 +21,7 @@ public class ClientSocketThread extends Thread{
         start();
     }
     public void run() {
-        new Receive(socket,"Server");
-        new Send(socket,"Client");
+        new ClientReceiveThread(socket,ID);
+        new ClientSendThread(ID,socket);
     }
 }
