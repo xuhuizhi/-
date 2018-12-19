@@ -18,24 +18,25 @@ class ServerReceiveThread extends Thread
         start();
     }
     public void run(){
-        try {
-            while(true)
+        while(true)
+        {
+            try{
+                int messageType=in.readInt();
+                if(messageType==1)
+                {
+                    NormalMessage normalMessage=new NormalMessage();
+                    normalMessage.receieve(in);
+                }
+                else if(messageType==2)
+                {
+                    BroadcastMessage broadcastMessage=new BroadcastMessage();
+                    broadcastMessage.receive(in);
+                }
+            }
+            catch (IOException e)
             {
-                int from=in.readInt();
-                int to = in.readInt();
-                int length=in.readInt();
-                String s = in.readUTF();
-                if(to!=1){
-                    MessageFactory messageFactory = new MessageFactory(from,to,length,s);
-                }
-                else{
-                    System.out.println("客户端"+from+" -> 服务器 :"+s);
-                }
 
             }
-        }catch (IOException e)
-        {
-
         }
     }
 }
