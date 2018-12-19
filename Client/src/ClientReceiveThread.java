@@ -21,38 +21,30 @@ public class ClientReceiveThread extends Thread{
         }
         start();
     }
-    public void getMessage(byte[] Message)
-    {
-        int from = (int) ((Message[3] & 0xff) | ((Message[2] & 0xff) << 8) | ((Message[1] & 0xff) << 16) | ((Message[0] & 0xff) << 24));
-        int to = (int) ((Message[7] & 0xff) | ((Message[6] & 0xff) << 8) | ((Message[5] & 0xff) << 16) | ((Message[4] & 0xff) << 24));
-        int length = (int) ((Message[11] & 0xff) | ((Message[10] & 0xff) << 8) | ((Message[9] & 0xff) << 16) | ((Message[8] & 0xff) << 24));
-        String s = new String();
-        for(int i=12;i<length+12;i++)
-            s=s+(char)Message[i];
-        if(from==1)
-            System.out.println("Server -> Client"+to+" :"+s);
-        else
-            System.out.println("Client"+from+" -> Client"+to+" :"+s);
-    }
+
     public void run(){
-        try{
-            byte[] b=new byte[200];
-            while(true)
-            {
-                in.read(b);
-                getMessage(b);
+        while (true) {
+            try {
+                int messageType = in.readInt();
+               // System.out.println("messageType:"+messageType);
+                if (messageType == 1) {
+                    NormalMessage normalMessage= new NormalMessage();
+                    normalMessage.receieve(in);
+                }
+                else if(messageType==2)
+                {
+                    BroadcastMessage broadcastMessage=new BroadcastMessage();
+                    broadcastMessage.receieve(in);
+                }
+                else if(messageType==3)
+                {
+                    LoginMessage loginMessage=new LoginMessage();
+                    loginMessage.receive(in);
+                }
+
+            } catch (IOException e) {
+
             }
-
-        }catch (IOException e){
-
-        }
-        try{
-            bin.close();
-            in.close();
-        }
-        catch (IOException e)
-        {
-
         }
     }
 }
