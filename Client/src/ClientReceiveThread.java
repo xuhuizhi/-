@@ -8,7 +8,12 @@ public class ClientReceiveThread extends Thread{
     private DataInputStream in;
     private Socket socket;
     private int ID;
+    String messages[]=new String[50];
     ClientReceiveThread(Socket socket,int id){
+        messages[1]="NormalMessage";
+        messages[2]="BroadcastMessage";
+        messages[3]="LoginMessage";
+        messages[4]="OnlineMessage";
         this.socket=socket;
         this.ID=id;
         try {
@@ -26,22 +31,25 @@ public class ClientReceiveThread extends Thread{
         while (true) {
             try {
                 int messageType = in.readInt();
-               // System.out.println("messageType:"+messageType);
-                if (messageType == 1) {
-                    NormalMessage normalMessage= new NormalMessage();
-                    normalMessage.receieve(in);
+                //System.out.println("messageType:"+messageType);
+                try {
+                    //System.out.println(messages[messageType]);
+                    Class clz=Class.forName(messages[messageType]);
+                    Message message=(Message) clz.newInstance();
+                    message.receive(in);
                 }
-                else if(messageType==2)
+                catch (ClassNotFoundException e)
                 {
-                    BroadcastMessage broadcastMessage=new BroadcastMessage();
-                    broadcastMessage.receieve(in);
+                    System.out.println("没有此类消息");
                 }
-                else if(messageType==3)
+                catch (InstantiationException e)
                 {
-                    LoginMessage loginMessage=new LoginMessage();
-                    loginMessage.receive(in);
-                }
 
+                }
+                catch (IllegalAccessException e)
+                {
+
+                }
             } catch (IOException e) {
 
             }

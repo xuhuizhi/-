@@ -1,16 +1,20 @@
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.util.Scanner;
 
-public class NormalMessage{
+public class NormalMessage extends Message{
+    Scanner sin = new Scanner(System.in);
     final static int type=1;
     int from,to;
     String message;
-    public void setMessage(int from,int to,String message)
+    public void setMessage(int from)
     {
         this.from=from;
-        this.to=to;
-        this.message=message;
+        System.out.println("请输入你要发送的目标编号");
+        to=sin.nextInt();
+        System.out.println("请输入你要发送的消息");
+        message=sin.next();
     }
     public void receieve(DataInputStream in)
     {

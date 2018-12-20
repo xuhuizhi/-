@@ -6,8 +6,11 @@ public class ClientSendThread extends Thread {
     private static DataOutputStream out;
     Scanner sin;
     private int myID;
+    String messages[]=new String[50];
     ClientSendThread(int myID,Socket socket)
     {
+        messages[1]="NormalMessage";
+        messages[2]="BroadcastMessage";
         this.myID=myID;
         try {
             sin = new Scanner(System.in);
@@ -25,20 +28,24 @@ public class ClientSendThread extends Thread {
         while(sin.hasNext())
         {
             int messageType=sin.nextInt();
-            if(messageType==1)
-            {
-                int to=sin.nextInt();
-                String str=sin.nextLine();
-                NormalMessage normalMessage=new NormalMessage();
-                normalMessage.setMessage(myID,to,str);
-                normalMessage.send(out);
+
+            try {
+                Class clz=Class.forName(messages[messageType]);
+                Message message=(Message) clz.newInstance();
+                message.setMessage(myID);
+                message.send(out);
             }
-            else if(messageType==2)
+            catch (ClassNotFoundException e)
             {
-                String str=sin.nextLine();
-                BroadcastMessage broadcastMessage=new BroadcastMessage();
-                broadcastMessage.setMessage(myID,str);
-                broadcastMessage.send(out);
+                System.out.println("没有此类消息");
+            }
+            catch (InstantiationException e)
+            {
+
+            }
+            catch (IllegalAccessException e)
+            {
+
             }
         }
     }

@@ -1,17 +1,20 @@
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.util.Scanner;
 
-public class BroadcastMessage {
+public class BroadcastMessage extends Message{
+    Scanner sin= new Scanner(System.in);
     final static int type=2;
     int from;
     String message;
-    public void setMessage(int from,String message)
+    public void setMessage(int from)
     {
         this.from=from;
-        this.message=message;
+        System.out.println("请输入你要发送的消息内容");
+        message=sin.next();
     }
-    public void receieve(DataInputStream in)
+    public void receive(DataInputStream in)
     {
         try {
             from=in.readInt();
