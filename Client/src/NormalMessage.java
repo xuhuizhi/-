@@ -16,7 +16,7 @@ public class NormalMessage extends Message{
         System.out.println("请输入你要发送的消息");
         message=sin.next();
     }
-    public void receieve(DataInputStream in)
+    public void receive(DataInputStream in)
     {
         try {
             from=in.readInt();

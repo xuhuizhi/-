@@ -6,11 +6,11 @@ public class ClientSendThread extends Thread {
     private static DataOutputStream out;
     Scanner sin;
     private int myID;
-    String messages[]=new String[50];
+    Message[] messages=new Message[10000];
     ClientSendThread(int myID,Socket socket)
     {
-        messages[1]="NormalMessage";
-        messages[2]="BroadcastMessage";
+        messages[1]=new NormalMessage();
+        messages[2]=new BroadcastMessage();
         this.myID=myID;
         try {
             sin = new Scanner(System.in);
@@ -28,25 +28,8 @@ public class ClientSendThread extends Thread {
         while(sin.hasNext())
         {
             int messageType=sin.nextInt();
-
-            try {
-                Class clz=Class.forName(messages[messageType]);
-                Message message=(Message) clz.newInstance();
-                message.setMessage(myID);
-                message.send(out);
-            }
-            catch (ClassNotFoundException e)
-            {
-                System.out.println("没有此类消息");
-            }
-            catch (InstantiationException e)
-            {
-
-            }
-            catch (IllegalAccessException e)
-            {
-
-            }
+            messages[messageType].setMessage(myID);
+            messages[messageType].send(out);
         }
     }
 }
