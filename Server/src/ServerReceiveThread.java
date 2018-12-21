@@ -5,10 +5,10 @@ class ServerReceiveThread extends Thread
 {
     private DataInputStream in;
     private Socket socket;
-    String messages[]=new String[50];
+    Message[] messages=new Message[100000];
     ServerReceiveThread(Socket socket){
-        messages[1]="NormalMessage";
-        messages[2]="BroadcastMessage";
+        messages[1]=new NormalMessage();
+        messages[2]=new BroadcastMessage();
         this.socket=socket;
         try
         {
@@ -25,23 +25,7 @@ class ServerReceiveThread extends Thread
         {
             try{
                 int messageType=in.readInt();
-                try {
-                    Class clz=Class.forName(messages[messageType]);
-                    Message message=(Message) clz.newInstance();
-                    message.receive(in);
-                }
-                catch (ClassNotFoundException e)
-                {
-                    System.out.println("没有此类消息");
-                }
-                catch (InstantiationException e)
-                {
-
-                }
-                catch (IllegalAccessException e)
-                {
-
-                }
+                messages[messageType].receive(in);
             }
             catch (IOException e)
             {
