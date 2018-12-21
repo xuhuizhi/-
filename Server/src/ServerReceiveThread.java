@@ -5,10 +5,7 @@ class ServerReceiveThread extends Thread
 {
     private DataInputStream in;
     private Socket socket;
-    Message[] messages=new Message[100000];
     ServerReceiveThread(Socket socket){
-        messages[1]=new NormalMessage();
-        messages[2]=new BroadcastMessage();
         this.socket=socket;
         try
         {
@@ -25,7 +22,7 @@ class ServerReceiveThread extends Thread
         {
             try{
                 int messageType=in.readInt();
-                messages[messageType].receive(in);
+                ServerSendThread.messageManage.mymap.get(messageType).receive(in);
             }
             catch (IOException e)
             {

@@ -4,13 +4,11 @@ import java.util.Scanner;
 
 public class ServerSendThread extends Thread {
     public static DataOutputStream out[]=new DataOutputStream[45];
+    public static MessageManage messageManage=new MessageManage();
     Scanner sin;
     private String name;
-    Message[] messages=new Message[100000];
     ServerSendThread(String name)
     {
-        messages[1]=new NormalMessage();
-        messages[2]=new BroadcastMessage();
         this.name=name;
         sin = new Scanner(System.in);
         start();
@@ -20,10 +18,7 @@ public class ServerSendThread extends Thread {
         try {
             out[ID] = new DataOutputStream(socket.getOutputStream());
             System.out.println("客户端"+ID+"连接成功");
-            LoginMessage loginMessage=new LoginMessage(ID);
-            OnlineMessage onlineMessage=new OnlineMessage(ID);
-            loginMessage.send(out[ID]);
-            onlineMessage.send(out);
+            messageManage.SendLoginMessage(ID);
         }
         catch (IOException e)
         {
@@ -36,8 +31,8 @@ public class ServerSendThread extends Thread {
         while(sin.hasNext())
         {
             int messageType=sin.nextInt();
-            messages[messageType].setMessage();
-            messages[messageType].send();
+            messageManage.mymap.get(messageType).setMessage();
+            messageManage.mymap.get(messageType).send();
             System.out.println("输入你要发送消息种类");
         }
     }

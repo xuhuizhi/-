@@ -1,20 +1,15 @@
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-public class LoginMessage {
+public class LoginMessage extends Message{
     final static int type=3;
-    int ID;
-    LoginMessage(int ID)
+    public void send(int ID)
     {
-        this.ID=ID;
-    }
-    public void send(DataOutputStream out)
-    {
+        DataOutputStream out=ServerSendThread.out[ID];
         try
         {
             out.writeInt(type);
             out.writeInt(ID);
-
         }
         catch (IOException e)
         {

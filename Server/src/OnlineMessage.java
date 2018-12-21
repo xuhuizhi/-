@@ -1,15 +1,12 @@
+
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-public class OnlineMessage {
+public class OnlineMessage extends Message{
     final static int type=4;
-    int ID;
-    OnlineMessage(int ID)
+    public void send(int ID)
     {
-        this.ID=ID;
-    }
-    public void send(DataOutputStream[] out)
-    {
+        DataOutputStream[] out=ServerSendThread.out;
         try {
             for (int i = 2; i <ServerThread.Threadcount ; i++) {
                 if(i!=ID)

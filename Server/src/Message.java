@@ -1,7 +1,18 @@
 import java.io.DataInputStream;
 
 abstract class Message  {
-    abstract void setMessage();
-    abstract void send();
-    abstract void receive(DataInputStream in);
+    public void setMessage(){
+
+    }
+    public void send(){
+
+    }
+    public void send(int ID)
+    {
+
+    }
+    public void receive(DataInputStream in){
+
+    }
+
 }
