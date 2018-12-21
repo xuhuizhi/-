@@ -7,13 +7,9 @@ public class ClientReceiveThread extends Thread{
     private BufferedInputStream bin;
     private DataInputStream in;
     private Socket socket;
+    public static MessageManage messageManage = new MessageManage();
     private int ID;
-    Message messages[]=new Message[10000];
     ClientReceiveThread(Socket socket,int id){
-        messages[1]=new NormalMessage();
-        messages[2]=new BroadcastMessage();
-        messages[3]=new LoginMessage();
-        messages[4]=new OnlineMessage();
         this.socket=socket;
         this.ID=id;
         try {
@@ -31,8 +27,8 @@ public class ClientReceiveThread extends Thread{
         while (true) {
             try {
                 int messageType = in.readInt();
-                //System.out.println("Messagetype:"+messageType);
-                messages[messageType].receive(in);
+                messageManage.mymap.get(messageType).receive(in);
+
             } catch (IOException e) {
 
             }

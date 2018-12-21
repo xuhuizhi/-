@@ -6,11 +6,8 @@ public class ClientSendThread extends Thread {
     private static DataOutputStream out;
     Scanner sin;
     private int myID;
-    Message[] messages=new Message[10000];
     ClientSendThread(int myID,Socket socket)
     {
-        messages[1]=new NormalMessage();
-        messages[2]=new BroadcastMessage();
         this.myID=myID;
         try {
             sin = new Scanner(System.in);
@@ -28,8 +25,8 @@ public class ClientSendThread extends Thread {
         while(sin.hasNext())
         {
             int messageType=sin.nextInt();
-            messages[messageType].setMessage(myID);
-            messages[messageType].send(out);
+            ClientReceiveThread.messageManage.mymap.get(messageType).setMessage(myID);
+            ClientReceiveThread.messageManage.mymap.get(messageType).send(out);
         }
     }
 }
