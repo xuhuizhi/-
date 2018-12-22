@@ -1,14 +1,18 @@
 import java.io.*;
 import java.net.Socket;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 
 public class ServerSendThread extends Thread {
-    public static DataOutputStream out[]=new DataOutputStream[45];
-    public static MessageManage messageManage=new MessageManage();
+    private Map<Integer,DataOutputStream>out=new HashMap<Integer, DataOutputStream>();
+    private MessageManage messageManage;
     Scanner sin;
     private String name;
     ServerSendThread(String name)
     {
+        MessageManageSingleton.SetOut(out);
+        messageManage=MessageManageSingleton.GetInsatance();
         this.name=name;
         sin = new Scanner(System.in);
         start();
@@ -16,13 +20,12 @@ public class ServerSendThread extends Thread {
     public void newConnect(int ID,Socket socket)
     {
         try {
-            out[ID] = new DataOutputStream(socket.getOutputStream());
-            System.out.println("客户端"+ID+"连接成功");
+            out.put(ID,new DataOutputStream(socket.getOutputStream()));
             messageManage.SendLoginMessage(ID);
         }
         catch (IOException e)
         {
-            System.out.println("服务器获得输出流失败");
+
         }
     }
 

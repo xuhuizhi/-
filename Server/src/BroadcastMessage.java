@@ -1,6 +1,7 @@
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.util.Map;
 import java.util.Scanner;
 
 public class BroadcastMessage extends Message{
@@ -8,6 +9,11 @@ public class BroadcastMessage extends Message{
     final static int messageType=2;
     int from;
     String message;
+    private Map<Integer,DataOutputStream> out;
+    BroadcastMessage(Map<Integer,DataOutputStream>out)
+    {
+        this.out=out;
+    }
     public void setMessage()
     {
         from=1;
@@ -28,15 +34,14 @@ public class BroadcastMessage extends Message{
     }
     public void send()
     {
-        DataOutputStream[] out=ServerSendThread.out;
         try{
             for(int i=2;i<ServerThread.Threadcount;i++)
             {
                 if(i!=from)
                 {
-                    out[i].writeInt(messageType);
-                    out[i].writeInt(from);
-                    out[i].writeUTF(message);
+                    out.get(i).writeInt(messageType);
+                    out.get(i).writeInt(from);
+                    out.get(i).writeUTF(message);
                 }
             }
             if(from==1)

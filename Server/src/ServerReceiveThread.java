@@ -5,6 +5,7 @@ class ServerReceiveThread extends Thread
 {
     private DataInputStream in;
     private Socket socket;
+    private MessageManage messageManage=MessageManageSingleton.GetInsatance();
     ServerReceiveThread(Socket socket){
         this.socket=socket;
         try
@@ -22,7 +23,7 @@ class ServerReceiveThread extends Thread
         {
             try{
                 int messageType=in.readInt();
-                ServerSendThread.messageManage.mymap.get(messageType).receive(in);
+                messageManage.mymap.get(messageType).receive(in);
             }
             catch (IOException e)
             {
