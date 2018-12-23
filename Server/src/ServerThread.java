@@ -8,7 +8,7 @@ public class ServerThread extends Thread {
     public static int Threadcount=2;
     ServerThread(ServerSocket s)
     {
-        serverSendThread=new ServerSendThread("Server");
+        serverSendThread=new ServerSendThread();
         serverSocket=s;
     }
 

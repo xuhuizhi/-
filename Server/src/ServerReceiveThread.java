@@ -5,7 +5,7 @@ class ServerReceiveThread extends Thread
 {
     private DataInputStream in;
     private Socket socket;
-    private MessageManage messageManage=MessageManageSingleton.GetInsatance();
+    private MessageManage messageManage=MessageManage.getInsatance();
     ServerReceiveThread(Socket socket){
         this.socket=socket;
         try

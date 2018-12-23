@@ -26,12 +26,12 @@ public class BroadcastMessage extends Message{
             System.out.println("读取广播消息失败");
         }
     }
-    public void send(DataOutputStream out)
+    public void send()
     {
         try{
-            out.writeInt(type);
-            out.writeInt(from);
-            out.writeUTF(message);
+            ClientSendThread.SendMessage(type);
+            ClientSendThread.SendMessage(from);
+            ClientSendThread.SendMessage(message);
             System.out.println("客户端"+from+": "+message);
         }
         catch (IOException e)

@@ -29,13 +29,13 @@ public class NormalMessage extends Message{
             System.out.println("读取普通消息失败");
         }
     }
-    public void send(DataOutputStream out)
+    public void send()
     {
         try{
-            out.writeInt(type);
-            out.writeInt(from);
-            out.writeInt(to);
-            out.writeUTF(message);
+            ClientSendThread.SendMessage(type);
+            ClientSendThread.SendMessage(from);
+            ClientSendThread.SendMessage(to);
+            ClientSendThread.SendMessage(message);
             if (to==1)
             {
                 System.out.println("客户端"+from+"->服务器: "+message);

@@ -7,7 +7,7 @@ public class ClientReceiveThread extends Thread{
     private BufferedInputStream bin;
     private DataInputStream in;
     private Socket socket;
-    public static MessageManage messageManage = new MessageManage();
+    private MessageManage manage = MessageManage.getInsatance();
     private int ID;
     ClientReceiveThread(Socket socket,int id){
         this.socket=socket;
@@ -27,7 +27,7 @@ public class ClientReceiveThread extends Thread{
         while (true) {
             try {
                 int messageType = in.readInt();
-                messageManage.mymap.get(messageType).receive(in);
+                manage.mymap.get(messageType).receive(in);
 
             } catch (IOException e) {
 

@@ -1,7 +1,5 @@
 import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
-import java.util.Map;
 import java.util.Scanner;
 
 public class NormalMessage extends Message{
@@ -9,11 +7,6 @@ public class NormalMessage extends Message{
     int from,to;
     String message;
     Scanner sin=new Scanner(System.in);
-    private Map<Integer,DataOutputStream> out;
-    NormalMessage(Map<Integer,DataOutputStream>out)
-    {
-        this.out=out;
-    }
     public void setMessage()
     {
         from=1;
@@ -38,10 +31,10 @@ public class NormalMessage extends Message{
     public void send()
     {
         try{
-            out.get(to).writeInt(type);
-            out.get(to).writeInt(from);
-            out.get(to).writeInt(to);
-            out.get(to).writeUTF(message);
+            ServerSendThread.SendMessage(to,type);
+            ServerSendThread.SendMessage(to,from);
+            ServerSendThread.SendMessage(to,to);
+            ServerSendThread.SendMessage(to,message);
             if(from==1)
                 System.out.println("服务器->客户端"+to+": "+message);
         }

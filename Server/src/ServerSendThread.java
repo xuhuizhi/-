@@ -5,15 +5,12 @@ import java.util.Map;
 import java.util.Scanner;
 
 public class ServerSendThread extends Thread {
-    private Map<Integer,DataOutputStream>out=new HashMap<Integer, DataOutputStream>();
+    private static Map<Integer,DataOutputStream>out=new HashMap<Integer, DataOutputStream>();
     private MessageManage messageManage;
     Scanner sin;
-    private String name;
-    ServerSendThread(String name)
+    ServerSendThread()
     {
-        MessageManageSingleton.SetOut(out);
-        messageManage=MessageManageSingleton.GetInsatance();
-        this.name=name;
+        messageManage=MessageManage.getInsatance();
         sin = new Scanner(System.in);
         start();
     }
@@ -27,6 +24,14 @@ public class ServerSendThread extends Thread {
         {
 
         }
+    }
+    public static void SendMessage(int id,String message) throws IOException
+    {
+        out.get(id).writeUTF(message);
+    }
+    public static void SendMessage(int id,int message) throws IOException
+    {
+        out.get(id).writeInt(message);
     }
 
     public void run() {

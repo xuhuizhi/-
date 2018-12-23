@@ -2,7 +2,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 
 abstract class Message {
-    public void send(DataOutputStream out){
+    public void send(){
 
     }
     public void receive(DataInputStream in){

@@ -1,19 +1,12 @@
 import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
-import java.util.Map;
 import java.util.Scanner;
 
 public class BroadcastMessage extends Message{
     Scanner sin = new Scanner(System.in);
-    final static int messageType=2;
+    final static int type=2;
     int from;
     String message;
-    private Map<Integer,DataOutputStream> out;
-    BroadcastMessage(Map<Integer,DataOutputStream>out)
-    {
-        this.out=out;
-    }
     public void setMessage()
     {
         from=1;
@@ -39,9 +32,9 @@ public class BroadcastMessage extends Message{
             {
                 if(i!=from)
                 {
-                    out.get(i).writeInt(messageType);
-                    out.get(i).writeInt(from);
-                    out.get(i).writeUTF(message);
+                    ServerSendThread.SendMessage(i,type);
+                    ServerSendThread.SendMessage(i,from);
+                    ServerSendThread.SendMessage(i,message);
                 }
             }
             if(from==1)
