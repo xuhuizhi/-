@@ -1,6 +1,6 @@
 import java.io.IOException;
 
-public class OnlineMessage extends Message{
+public class OnlineMessage extends Message implements Observer{
     final static int type=4;
     public void send(int ID)
     {
@@ -18,5 +18,9 @@ public class OnlineMessage extends Message{
         {
 
         }
+    }
+
+    public void Update(int ID) {
+        send(ID);
     }
 }

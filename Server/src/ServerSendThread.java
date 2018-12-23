@@ -6,7 +6,9 @@ import java.util.Scanner;
 
 public class ServerSendThread extends Thread {
     private static Map<Integer,DataOutputStream>out=new HashMap<Integer, DataOutputStream>();
+    NewConnentSubject newConnentSubject= new NewConnentSubject();
     private MessageManage messageManage;
+    private Message message;
     Scanner sin;
     ServerSendThread()
     {
@@ -18,7 +20,7 @@ public class ServerSendThread extends Thread {
     {
         try {
             out.put(ID,new DataOutputStream(socket.getOutputStream()));
-            messageManage.SendLoginMessage(ID);
+            newConnentSubject.Notify(ID);
         }
         catch (IOException e)
         {
@@ -39,8 +41,9 @@ public class ServerSendThread extends Thread {
         while(sin.hasNext())
         {
             int messageType=sin.nextInt();
-            messageManage.mymap.get(messageType).setMessage();
-            messageManage.mymap.get(messageType).send();
+            message=messageManage.getMessage(messageType);
+            message.setMessage();
+            message.send();
             System.out.println("输入你要发送消息种类");
         }
     }

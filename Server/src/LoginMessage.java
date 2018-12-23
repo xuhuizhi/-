@@ -1,6 +1,6 @@
 import java.io.IOException;
 
-public class LoginMessage extends Message{
+public class LoginMessage extends Message implements Observer{
     final static int type=3;
     public void send(int ID)
     {
@@ -15,4 +15,7 @@ public class LoginMessage extends Message{
         }
     }
 
+    public void Update(int ID) {
+        send(ID);
+    }
 }
