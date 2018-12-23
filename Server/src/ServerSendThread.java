@@ -8,7 +8,6 @@ public class ServerSendThread extends Thread {
     private static Map<Integer,DataOutputStream>out=new HashMap<Integer, DataOutputStream>();
     NewConnentSubject newConnentSubject= new NewConnentSubject();
     private MessageManage messageManage;
-    private Message message;
     Scanner sin;
     ServerSendThread()
     {
@@ -43,9 +42,8 @@ public class ServerSendThread extends Thread {
         while(sin.hasNext())
         {
             int messageType=sin.nextInt();
-            message=messageManage.getMessage(messageType);
-            message.setMessage();
-            message.send();
+            messageManage.setMessage(messageType);
+            messageManage.send(messageType);
             System.out.println("输入你要发送消息种类");
         }
     }

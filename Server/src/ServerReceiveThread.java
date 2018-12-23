@@ -24,8 +24,7 @@ class ServerReceiveThread extends Thread
         {
             try{
                 int messageType=in.readInt();
-                message=messageManage.getMessage(messageType);
-                message.receive(in);
+                messageManage.receive(messageType,in);
             }
             catch (IOException e)
             {

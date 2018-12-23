@@ -1,3 +1,4 @@
+import java.io.DataInputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -15,8 +16,16 @@ public class MessageManage {
     {
         return manage;
     }
-    public static Message getMessage(int messageType)
+    public static void setMessage(int messageType)
     {
-        return mymap.get(messageType);
+        mymap.get(messageType).setMessage();
+    }
+    public static void send(int messageType)
+    {
+        mymap.get(messageType).send();
+    }
+    public static void receive(int messageType, DataInputStream in)
+    {
+        mymap.get(messageType).receive(in);
     }
 }
