@@ -14,6 +14,8 @@ public class ServerSendThread extends Thread {
     {
         messageManage=MessageManage.getInsatance();
         sin = new Scanner(System.in);
+        newConnentSubject.attach(new LoginMessage());
+        newConnentSubject.attach(new OnlineMessage());
         start();
     }
     public void newConnect(int ID,Socket socket)

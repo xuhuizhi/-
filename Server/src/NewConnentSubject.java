@@ -1,14 +1,6 @@
-import java.util.ArrayList;
-import java.util.List;
 
-public class NewConnentSubject {
-    private List<Observer> observers = new ArrayList<Observer>();
+public class NewConnentSubject extends Subject{
 
-    NewConnentSubject(){
-        observers.add(new LoginMessage());
-        observers.add(new OnlineMessage());
-    }
-    
     public void Notify(int ID)
     {
         for (int i = 0; i <observers.size() ; i++) {
