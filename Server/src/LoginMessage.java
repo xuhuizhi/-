@@ -15,7 +15,7 @@ public class LoginMessage extends Message implements Observer{
         }
     }
 
-    public void Update(int ID) {
-        send(ID);
+    public void Update(Object object) {
+        send((int)object);
     }
 }

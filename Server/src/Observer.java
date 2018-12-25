@@ -1,3 +1,3 @@
 interface Observer {
-    abstract void Update(int ID);
+    abstract void Update(Object object);
 }

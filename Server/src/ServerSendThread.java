@@ -6,22 +6,20 @@ import java.util.Scanner;
 
 public class ServerSendThread extends Thread {
     private static Map<Integer,DataOutputStream>out=new HashMap<Integer, DataOutputStream>();
-    NewConnentSubject newConnentSubject= new NewConnentSubject();
     private MessageManage messageManage;
+    Subject subject = Subject.getInstance();
     Scanner sin;
     ServerSendThread()
     {
         messageManage=MessageManage.getInsatance();
         sin = new Scanner(System.in);
-        newConnentSubject.attach(new LoginMessage());
-        newConnentSubject.attach(new OnlineMessage());
         start();
     }
-    public void newConnect(int ID,Socket socket)
+    public void newConnect(Integer ID,Socket socket)
     {
         try {
             out.put(ID,new DataOutputStream(socket.getOutputStream()));
-            newConnentSubject.Notify(ID);
+            subject.Notify("newConnect",(Object)ID);
         }
         catch (IOException e)
         {
